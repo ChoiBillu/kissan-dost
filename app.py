@@ -577,7 +577,7 @@ with tab_diag:
                     return response.text
             except Exception as e:
                 # If multimodal failed on a text-only model, retry with text only
-                if pil_img is not None:
+                if image_part is not None:
                     try:
                         text_only_prompt = f"{full_prompt}\n\n(Note: Farmer uploaded a crop leaf image showing symptoms)."
                         response = client.models.generate_content(
