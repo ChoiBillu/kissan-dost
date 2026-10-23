@@ -323,6 +323,46 @@ DEMO_RESPONSES = {
 * آبپاشی کے وقت فوارے سے پرہیز کریں، صرف جڑوں میں پانی دیں تاکہ پتوں میں نمی زیادہ دیر نہ رہے۔
 * شدید متاثرہ پرانے پتے توڑ کر کھیت سے دور دبا دیں۔
 * 🔬 **اہم نوٹ:** تصویر سے تشخیص ایک ابتدائی رہنمائی ہے۔ حتمی تصدیق کے لیے متاثرہ پتہ قریبی **دفتر محکمہ زراعت توسیع** یا **ایوب ایگریکلچرل ریسرچ انسٹیٹیوٹ (AARI Faisalabad)** کی لیب میں دکھائیں۔"""
+,
+
+    "Mango Anthracnose & Dieback": """### 🥭 تشخیص | Diagnosis & Cause
+**فصل:** آم (Mango - *Mangifera indica*)  
+**بیماری:** آم کا اینتھریکنوز / جھلساؤ اور ڈائی بیک (Mango Anthracnose & Dieback - *Colletotrichum gloeosporioides*)  
+**وجہ:** فنگل حملہ جو مرطوب موسم، بارشوں اور پرانی سوکھی شاخوں کے ذریعے پھیلتا ہے۔
+
+---
+
+### 🩺 علامات اور مشاہدہ | Visual Observations
+* آم کے پتوں کے کناروں اور نوک پر سیاہ یا گہرے بھورے دھبے بن جاتے ہیں جو بعد میں جھلسے ہوئے نظر آتے ہیں۔
+* نئی نازک ٹہنیاں اوپر سے نیچے کی طرف سوکھنا شروع ہوتی ہیں (Dieback)۔
+* شدید حملے میں پھول اور چھوٹے بور کالے ہو کر گر جاتے ہیں۔
+
+---
+
+### 💊 فوری علاج اور اسپرے | Recommended Spray & Action
+1. **پھپھوندی کش اسپرے (Fungicide):**
+   - **کاپر آکسی کلورائیڈ (Copper Oxychloride):** 250 گرام فی 100 لیٹر پانی میں ملا کر اسپرے کریں۔
+   - یا **ڈائفینوکونازول (Difenoconazole) + ایزوکسی سٹروبن:** 100 تا 150 ملی لیٹر فی 100 لیٹر پانی۔
+2. **کٹائی اور صفائی:**
+   - درخت کے سوکھے ہوئے حصے اور بیمار ٹہنیاں تندرست لکڑی سے 2 انچ نیچے سے کاٹ دیں اور کٹے ہوئے سرے پر کاپر پیسٹ (بورڈو پیسٹ) لگائیں۔
+
+---
+
+### 🛡️ احتیاطی تدابیر اور لیب تصدیق | Safety & Extension Office
+* ⚠️ **قرنطینہ اور انتظار کا وقفہ (PHI):** پھل کی چنائی سے کم از کم **14 دن** قبل کیمیائی اسپرے روک دیں۔
+* حتمی تصدیق اور علاقائی سپرے شیڈول کے لیے **آم ریسرچ اسٹیشن شجاع آباد / ملتان** یا **ایوب ایگریکلچرل ریسرچ انسٹیٹیوٹ (AARI Faisalabad)** سے رجوع کریں۔""",
+
+    "Maize Stem Borer & Blight": """### 🌽 تشخیص | Diagnosis & Cause
+**فصل:** مکئی (Maize / Corn - *Zea mays*)  
+**بیماری / کیڑا:** مکئی کا پتا جھلساؤ (Northern Corn Leaf Blight) یا تنے کی سنڈی (Stem Borer)  
+**وجہ:** فنگل انفیکشن یا سنڈی کا اندرونی تنے میں سوراخ کرنا۔
+
+---
+
+### 🩺 علامات اور علاج | Observations & Sprays
+* پتوں پر کشتی نما لمبے بھورے دھبے یا تنے میں سنڈی کے فضلے کے ساتھ سوراخ۔
+* علاج کے لیے فنگس کش ڈائفینوکونازول یا سنڈی کے خاتمے کے لیے کلورینٹرانیلی پرول دانے دار کا استعمال کریں۔"""
+
 }
 
 # Header Section
@@ -523,17 +563,22 @@ with tab_diag:
             with st.spinner("🌾 KisaanDost AI is analyzing pathology and formulating remedies..."):
                 active_key = (api_key_input.strip() or os.getenv("GEMINI_API_KEY", "")).strip().strip('"').strip("'")
                 
-                # Helper for fallback matching
+                # Helper for fallback matching - strictly checks crop selection
                 def get_local_response():
-                    matched = None
                     lower_q = (symptom_query or "").lower()
-                    if "گونگلو" in lower_q or "شلجم" in lower_q or "turnip" in lower_q or "gonglu" in lower_q or "Turnip" in crop_type:
-                        return DEMO_RESPONSES["Turnip Gonglu Leaf Spots"]
-                    for key_name in DEMO_RESPONSES:
-                        if key_name.split()[0].lower() in lower_q or "کپاس" in lower_q or "گندم" in lower_q or "کماد" in lower_q:
-                            matched = DEMO_RESPONSES[key_name]
-                            break
-                    return matched or DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"]
+                    if "Mango" in crop_type or "آم" in lower_q or "mango" in lower_q:
+                        return DEMO_RESPONSES.get("Mango Anthracnose & Dieback", DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"])
+                    if "Turnip" in crop_type or "گونگلو" in lower_q or "شلجم" in lower_q or "turnip" in lower_q or "gonglu" in lower_q:
+                        return DEMO_RESPONSES.get("Turnip Gonglu Leaf Spots", DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"])
+                    if "Wheat" in crop_type or "گندم" in lower_q or "wheat" in lower_q:
+                        return DEMO_RESPONSES.get("Wheat Yellow Rust", DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"])
+                    if "Sugarcane" in crop_type or "کماد" in lower_q or "cane" in lower_q:
+                        return DEMO_RESPONSES.get("Sugarcane Red Rot", DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"])
+                    if "Maize" in crop_type or "مکئی" in lower_q or "corn" in lower_q:
+                        return DEMO_RESPONSES.get("Maize Stem Borer & Blight", DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"])
+                    if "Cotton" in crop_type or "کپاس" in lower_q or "cotton" in lower_q:
+                        return DEMO_RESPONSES.get("Cotton Leaf Curl Virus (CLCuV)")
+                    return DEMO_RESPONSES.get("Mango Anthracnose & Dieback") if "Mango" in crop_type else DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"]
 
                 if offline_toggle:
                     advisory_result = get_local_response()
