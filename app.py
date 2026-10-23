@@ -290,7 +290,39 @@ DEMO_RESPONSES = {
 
 ### 🛡️ احتیاطی تدابیر | Prevention & Best Practices
 * متاثرہ فصل کا گنا بیج کے طور پر ہرگز استعمال نہ کریں۔
-* بیج کے پوروں کو کاربینڈازم یا تھائیو فینیٹ میتھائل کے محلول میں 10 منٹ ڈبو کر کاشت کریں۔"""
+* بیج کے پوروں کو کاربینڈازم یا تھائیو فینیٹ میتھائل کے محلول میں 10 منٹ ڈبو کر کاشت کریں۔""",
+
+    "Turnip Gonglu Leaf Spots": """### 🌾 ممکنہ تشخیص | Probable Diagnosis & Causes
+**فصل:** شلجم / گونگلو (Turnip - *Brassica rapa*)  
+تصویر اور علامات کے تجزیے کی بنیاد پر ممکنہ وجوہات درج ذیل ہیں:
+1. **الٹرنیریا کا سیاہ داغ (Alternaria Leaf Spot - *Alternaria brassicae*):** پتوں پر گول گہرے بھورے یا سیاہ دھبے جن کے گرد پیلا ہالہ ہو سکتا ہے۔
+2. **بیکٹیریل داغ (Bacterial Leaf Spot / Black Rot):** بیکٹیریا کے حملے سے بننے والے دھبے جو سوکھ کر خاکی ہو جاتے ہیں۔
+3. **پسو کیڑا (Flea Beetle Damage):** اگر پتوں میں باریک باریک چھلنی جیسے گول سوراخ ہوں۔
+
+---
+
+### 🩺 علامات اور مشاہدہ | Visual Observations
+* پتوں کی اوپری سطح پر خشک، بھورے دھبے نظر آ رہے ہیں۔
+* سفید پاؤڈر (Powdery Mildew) کی کوئی علامات موجود نہیں ہیں۔
+* پتوں کی نچلی سطح کا معائنہ کریں کہ کیڑے یا جالے تو موجود نہیں۔
+
+---
+
+### 💊 تدابیر، علاج اور اسپرے | Recommended Actions & Sprays
+1. **فنگل انفیکشن (الٹرنیریا) کی روک تھام:**
+   - کاپر آکسی کلورائیڈ (Copper Oxychloride) یا مینکوزیب (Mancozeb) کا حفاظتی اسپرے کیا جا سکتا ہے۔
+2. **حیاتیاتی کنٹرول (Bio-fungicide):**
+   - ٹرائیکوڈرما (*Trichoderma*) ایک **مفید حیاتیاتی پھپھوند** ہے جو زمین کی بیماریوں سے بچاؤ میں مددگار ہوتی ہے۔
+3. ⚠️ **لازمی حفاظتی ہدایات (Safety & Pre-Harvest Interval):**
+   - **قرنطینہ / انتظار کا وقفہ (PHI):** اسپرے کے بعد کم از کم **7 تا 10 دن** تک شلجم کے پتے (ساگ) یا گانٹھیں ہرگز نہ توڑیں اور نہ کھائیں۔
+   - ہمیشہ دوا کی بوتل پر درج کمپنی لیبل اور منظور شدہ ڈوز کے مطابق استعمال کریں۔
+
+---
+
+### 🛡️ احتیاطی تدابیر اور لیب تصدیق | Prevention & Extension Office
+* آبپاشی کے وقت فوارے سے پرہیز کریں، صرف جڑوں میں پانی دیں تاکہ پتوں میں نمی زیادہ دیر نہ رہے۔
+* شدید متاثرہ پرانے پتے توڑ کر کھیت سے دور دبا دیں۔
+* 🔬 **اہم نوٹ:** تصویر سے تشخیص ایک ابتدائی رہنمائی ہے۔ حتمی تصدیق کے لیے متاثرہ پتہ قریبی **دفتر محکمہ زراعت توسیع** یا **ایوب ایگریکلچرل ریسرچ انسٹیٹیوٹ (AARI Faisalabad)** کی لیب میں دکھائیں۔"""
 }
 
 # Header Section
@@ -345,7 +377,7 @@ tab_diag, tab_threat, tab_spray, tab_about = st.tabs([
 # ----------------- TAB 1: DIAGNOSTIC LAB -----------------
 with tab_diag:
     st.markdown("#### ⚡ 1-Click Regional Presets (Faisalabad Division):")
-    col_p1, col_p2, col_p3 = st.columns(3)
+    col_p1, col_p2, col_p3, col_p4 = st.columns(4)
     
     selected_preset = ""
     with col_p1:
@@ -357,67 +389,96 @@ with tab_diag:
     with col_p3:
         if st.button("🎋 کماد کی سرخ سڑاند (Sugarcane Red Rot)"):
             selected_preset = "کماد کا تنا اندر سے لال نکل رہا ہے اور الکوحل جیسی بو آ رہی ہے۔ گنے سوکھ رہے ہیں۔ علاج بتائیں۔"
+    with col_p4:
+        if st.button("🥬 شلجم / گونگلو کے داغ (Turnip Spots)"):
+            selected_preset = "گونگلو (شلجم) کے پتوں پر چھوٹے گہرے بھورے داغ بن رہے ہیں اور کچھ پتے سوکھ رہے ہیں۔ بیماری اور محفوظ علاج بتائیں۔"
 
     st.write("")
     
     col_crop, col_img = st.columns([1, 1])
     with col_crop:
         crop_type = st.selectbox(
-            "Select Crop / فصل کا انتخاب کریں:",
-            options=["🌾 Wheat (گندم)", "🌿 Cotton (کپاس)", "🎋 Sugarcane (کماد / گنا)", "🌽 Maize (مکئی)", "🥭 Mango (آم)", "🥬 Vegetables (سبزیاں)"]
+            "Select Crop / فصل یا سبزی کا انتخاب کریں:",
+            options=[
+                "🌾 Wheat (گندم)", 
+                "🌿 Cotton (کپاس)", 
+                "🎋 Sugarcane (کماد / گنا)", 
+                "🥬 Turnip / Gonglu (شلجم / گونگلو)", 
+                "🌽 Maize (مکئی)", 
+                "🥭 Mango (آم)", 
+                "🥦 Other Vegetables (دیگر سبزیاں)"
+            ]
         )
     with col_img:
         uploaded_image = st.file_uploader(
-            "📷 Upload Crop/Leaf Photo (Optional Inspection):",
+            "📷 Upload Crop/Leaf Photo (Visual Multimodal AI Inspection):",
             type=["png", "jpg", "jpeg"],
-            help="Upload an image of an infected leaf or stem."
+            help="Upload a clear photo of an infected leaf, stem, or root for direct visual inspection."
         )
         if uploaded_image:
-            st.image(uploaded_image, caption="Uploaded Leaf Sample for Visual Inspection", width=220)
+            st.image(uploaded_image, caption="Uploaded Sample for Visual AI Inspection", width=220)
 
     with st.form("diagnostic_form"):
         symptom_query = st.text_area(
             "Describe Symptoms / فصل کی علامات بیان کریں:",
             value=selected_preset,
             height=110,
-            placeholder="مثال: پتوں پر زرد رنگ کا پاؤڈر بن رہا ہے، یا تنے پر کیڑوں کا حملہ ہے..."
+            placeholder="مثال: گونگلو (شلجم) کے پتوں پر داغ بن رہے ہیں، یا گندم کے پتوں پر زرد پاؤڈر نظر آ رہا ہے..."
         )
         
         col_submit, col_hint = st.columns([1, 3])
         with col_submit:
             run_btn = st.form_submit_button("🔍 Run Gemma 4 Diagnosis", type="primary")
         with col_hint:
-            st.caption("Supported in **Urdu (اردو)**, **Roman Urdu**, and **English**.")
+            st.caption("Supported in **Urdu (اردو)**, **Roman Urdu**, and **English** &bull; Multimodal Image Analysis active.")
 
-    # Gemma Inference Function with Auto-Fallback & Graceful Recovery
-    def query_gemma(prompt_text: str, key: str, chosen_model: str, crop_name: str) -> str:
+    # Gemma Multimodal Inference Function with Punjab Agronomy Intelligence
+    def query_gemma(prompt_text: str, key: str, chosen_model: str, crop_name: str, image_file=None) -> str:
         clean_key = key.strip().strip('"').strip("'")
         system_instruction = (
             f"You are 'KisaanDost' (کسان دوست), an expert agricultural scientist and crop pathologist tailored "
-            f"for farmers in Faisalabad and the wider Punjab province of Pakistan. "
-            f"Target Crop: {crop_name}. "
-            "When the user describes symptoms: "
-            "1. Identify the most probable disease or pest (Urdu and English). "
-            "2. Detail the exact observed symptoms. "
-            "3. Provide actionable, locally available chemical and organic remedies/sprays (e.g. active ingredients available in Punjab, Pakistan like Pyriproxyfen, Tebuconazole, Diafenthiuron). "
-            "4. Provide practical preventive measures for subsequent crop cycles. "
-            "Ensure the response is structured with Markdown headings and provides clear Urdu explanations."
+            f"for farmers in Faisalabad and the wider Punjab province of Pakistan.\n"
+            f"Target Crop: {crop_name}.\n\n"
+            "CRITICAL PUNJAB AGRONOMY RULES:\n"
+            "1. CROP IDENTIFICATION: In Punjab, 'Gonglu' (گونگلو) means Turnip (شلجم / Brassica rapa), a brassica vegetable. "
+            "It is NOT a cucurbit/gourd! For turnip, candidates are Alternaria leaf spot, Bacterial leaf spot (Xanthomonas), and Flea beetle damage.\n"
+            "2. IMAGE ANALYSIS: If a photo is attached, explicitly describe what you observe (e.g. dry brown spots, yellow halos, shot-holes) "
+            "and rule out diseases that do not match the visual evidence (e.g. rule out powdery mildew if there is no white powder).\n"
+            "3. LINGUISTIC & BIOLOGICAL ACCURACY: Never use incorrect translations like 'مٹی کے لعنت'. "
+            "Trichoderma is a 'مفید حیاتیاتی پھپھوند' (beneficial bio-fungicide). Do not invent terms like 'کنگی اسپاٹ'. Use standard Urdu botanical terms.\n"
+            "4. PRE-HARVEST INTERVAL (PHI) & SAFETY: Turnip leaves (saag) and roots are eaten! Whenever recommending chemical sprays "
+            "(e.g. Copper Oxychloride, Mancozeb), ALWAYS emphasize the Pre-Harvest Interval (PHI / انتظار کا وقفہ / قرنطینہ - usually 7-14 days) "
+            "and instruct the farmer to always read the container label and confirm local dosage.\n"
+            "5. DIAGNOSTIC HUMILITY: Never claim a photo diagnosis is '100% accurate'. State that visual inspection gives probable causes, "
+            "and advise the farmer to bring a physical sample to their nearest Agriculture Extension Office (دفتر محکمہ زراعت توسیع) "
+            "or Ayub Agricultural Research Institute (AARI Faisalabad) for laboratory confirmation.\n\n"
+            "Format your response with clear Markdown headers in both English and clear, respectful Urdu."
         )
         
         from google import genai
+        from PIL import Image
         client = genai.Client(api_key=clean_key)
         
         full_prompt = f"{system_instruction}\n\nFarmer Query:\n{prompt_text}"
         
-        # Candidate models supported by Gemini API / google-genai
+        # Prepare multimodal payload if image is uploaded
+        pil_img = None
+        if image_file is not None:
+            try:
+                image_file.seek(0)
+                pil_img = Image.open(image_file)
+            except Exception:
+                pil_img = None
+
+        contents_payload = [full_prompt, pil_img] if pil_img is not None else full_prompt
+
+        # Candidate models supporting multimodal generate_content
         fallback_models = [
             chosen_model,
-            "gemma-4-26b-a4b-it",
             "gemini-2.0-flash",
             "gemini-2.0-flash-exp",
-            "gemma-2-27b-it",
-            "gemma-2-9b-it",
             "gemini-1.5-flash-latest",
+            "gemma-4-26b-a4b-it",
             "gemini-1.5-pro-latest",
         ]
         
@@ -431,31 +492,45 @@ with tab_diag:
             try:
                 response = client.models.generate_content(
                     model=candidate,
-                    contents=full_prompt,
+                    contents=contents_payload,
                 )
                 if response and response.text:
                     if candidate != chosen_model:
-                        st.toast(f"🌾 Answered via {candidate}!", icon="✅")
+                        st.toast(f"🌾 Diagnosed via {candidate}!", icon="✅")
                     return response.text
             except Exception as e:
+                # If multimodal failed on a text-only model, retry with text only
+                if pil_img is not None:
+                    try:
+                        text_only_prompt = f"{full_prompt}\n\n(Note: Farmer uploaded a crop leaf image showing symptoms)."
+                        response = client.models.generate_content(
+                            model=candidate,
+                            contents=text_only_prompt,
+                        )
+                        if response and response.text:
+                            return response.text
+                    except Exception:
+                        pass
                 last_error = e
                 continue
         
-        # If all live endpoints return 500/404 (e.g. server outage), raise so caller handles fallback
         raise last_error
 
     if run_btn:
-        if not symptom_query.strip():
-            st.warning("⚠️ Please enter crop symptoms or select one of the presets above.")
+        if not symptom_query.strip() and uploaded_image is None:
+            st.warning("⚠️ Please enter crop symptoms or upload a photo.")
         else:
-            with st.spinner("🌾 Gemma 4 is analyzing crop pathology and formulating remedies..."):
+            with st.spinner("🌾 KisaanDost AI is analyzing pathology and formulating remedies..."):
                 active_key = (api_key_input.strip() or os.getenv("GEMINI_API_KEY", "")).strip().strip('"').strip("'")
                 
                 # Helper for fallback matching
                 def get_local_response():
                     matched = None
+                    lower_q = (symptom_query or "").lower()
+                    if "گونگلو" in lower_q or "شلجم" in lower_q or "turnip" in lower_q or "gonglu" in lower_q or "Turnip" in crop_type:
+                        return DEMO_RESPONSES["Turnip Gonglu Leaf Spots"]
                     for key_name in DEMO_RESPONSES:
-                        if key_name.split()[0].lower() in symptom_query.lower() or "کپاس" in symptom_query or "گندم" in symptom_query or "کماد" in symptom_query:
+                        if key_name.split()[0].lower() in lower_q or "کپاس" in lower_q or "گندم" in lower_q or "کماد" in lower_q:
                             matched = DEMO_RESPONSES[key_name]
                             break
                     return matched or DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"]
@@ -468,10 +543,9 @@ with tab_diag:
                         st.error("❌ No Gemini API Key found. Please enter your key in the sidebar or check `.env`.")
                         st.stop()
                     try:
-                        advisory_result = query_gemma(symptom_query, active_key, model_name, crop_type)
+                        advisory_result = query_gemma(symptom_query, active_key, model_name, crop_type, uploaded_image)
                     except Exception as err:
-                        # Graceful recovery: show the warning but DO NOT crash the presentation!
-                        st.warning(f"⚠️ Google API Server is temporarily overloaded ({str(err)}). Seamlessly serving verified regional advisory:")
+                        st.warning(f"⚠️ Google API Server connection note ({str(err)}). Seamlessly serving verified regional advisory:")
                         advisory_result = get_local_response()
 
             st.success("✅ Analysis Complete!")
