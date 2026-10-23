@@ -363,6 +363,29 @@ DEMO_RESPONSES = {
 * پتوں پر کشتی نما لمبے بھورے دھبے یا تنے میں سنڈی کے فضلے کے ساتھ سوراخ۔
 * علاج کے لیے فنگس کش ڈائفینوکونازول یا سنڈی کے خاتمے کے لیے کلورینٹرانیلی پرول دانے دار کا استعمال کریں۔"""
 
+,
+
+    "Dragonfruit Stem / Fruit Canker": """### 🌵 تشخیص | Diagnosis & Identification
+**پودا / فصل:** ڈریگن فروٹ (Dragonfruit / Pitaya - *Selenicereus / Hylocereus*)  
+**بیماری:** فنگل کینکر اور اینتھریکنوز (Stem Canker / Bipolaris / Colletotrichum)  
+**اہم مشاہدہ:** تصویر میں ڈریگن فروٹ کے کیکٹس نما تنے یا پھل پر پیلے، بھورے یا گہرے رنگ کے داغ اور کینکر دیکھا گیا ہے۔ یہ آم یا گندم نہیں ہے۔
+
+---
+
+### 🩺 علامات اور بصری مشاہدہ | Visual Observations
+* تنے کے کناروں پر سنہرے یا خاکی ابھرے ہوئے دھبے بن جاتے ہیں۔
+* شدید حملے میں تنے کا گودا گل کر سوکھ جاتا ہے۔
+
+---
+
+### 💊 علاج اور اسپرے | Recommended Spray & Action
+1. **پھپھوندی کش اسپرے:**
+   - کاپر ہائیڈرو آکسائیڈ یا کاپر آکسی کلورائیڈ (Copper Oxychloride) 2 تا 2.5 گرام فی لیٹر پانی۔
+   - یا ایزوکسی سٹروبن + ڈائفینوکونازول کا اسپرے کریں۔
+2. **سوکھی شاخوں کی صفائی:**
+   - متاثرہ کیکٹس کے حصوں کو تیز چاقو سے کاٹ کر صاف کریں اور اس پر کاپر پیسٹ لگائیں۔
+3. ⚠️ **انتظار کا وقفہ (PHI):** پھل توڑنے سے کم از کم 7 تا 10 دن قبل اسپرے بند کر دیں۔"""
+
 }
 
 # Header Section
@@ -440,12 +463,14 @@ with tab_diag:
         crop_type = st.selectbox(
             "Select Crop / فصل یا سبزی کا انتخاب کریں:",
             options=[
+                "🔍 Auto-Detect Plant from Photo (تصویر سے پودے کی پہچان)",
+                "🥭 Mango (آم)",
+                "🥬 Turnip / Gonglu (شلجم / گونگلو)",
                 "🌾 Wheat (گندم)", 
                 "🌿 Cotton (کپاس)", 
                 "🎋 Sugarcane (کماد / گنا)", 
-                "🥬 Turnip / Gonglu (شلجم / گونگلو)", 
                 "🌽 Maize (مکئی)", 
-                "🥭 Mango (آم)", 
+                "🌵 Exotic Fruits / Dragonfruit (ڈریگن فروٹ وغیرہ)",
                 "🥦 Other Vegetables (دیگر سبزیاں)"
             ]
         )
@@ -476,11 +501,14 @@ with tab_diag:
     def query_gemma(prompt_text: str, key: str, chosen_model: str, crop_name: str, image_file=None) -> str:
         clean_key = key.strip().strip('"').strip("'")
         system_instruction = (
-            f"You are 'KisaanDost' (کسان دوست), an expert agricultural scientist and crop pathologist tailored "
-            f"for farmers in Faisalabad and the wider Punjab province of Pakistan.\n"
-            f"Target Crop: {crop_name}.\n\n"
-            "CRITICAL PUNJAB AGRONOMY RULES:\n"
-            "1. CROP IDENTIFICATION: In Punjab, 'Gonglu' (گونگلو) means Turnip (شلجم / Brassica rapa), a brassica vegetable. "
+            f"You are 'KisaanDost' (کسان دوست), an expert agricultural scientist, botanist, and crop pathologist tailored "
+            f"for farmers in Pakistan.\n"
+            f"User Selected Crop: {crop_name}.\n\n"
+            "CRITICAL BOTANICAL & AGRONOMY RULES:\n"
+            "1. IMAGE-FIRST PLANT IDENTIFICATION: If an image is uploaded, FIRST visually identify what plant/crop is shown in the photo. "
+            "Do NOT blindly assume it is the dropdown crop! For instance, if the photo shows Dragonfruit (cactus-like stem), Citrus, or Tomato, "
+            "explicitly identify the true plant first and diagnose its exact disease.\n"
+            "2. REGIONAL CROP ONTOLOGY: In Punjab, 'Gonglu' (گونگلو) means Turnip (شلجم / Brassica rapa), a brassica vegetable. "
             "It is NOT a cucurbit/gourd! For turnip, candidates are Alternaria leaf spot, Bacterial leaf spot (Xanthomonas), and Flea beetle damage.\n"
             "2. IMAGE ANALYSIS: If a photo is attached, explicitly describe what you observe (e.g. dry brown spots, yellow halos, shot-holes) "
             "and rule out diseases that do not match the visual evidence (e.g. rule out powdery mildew if there is no white powder).\n"
@@ -501,26 +529,35 @@ with tab_diag:
         
         full_prompt = f"{system_instruction}\n\nFarmer Query:\n{prompt_text}"
         
-        # Prepare multimodal payload if image is uploaded
-        pil_img = None
+        # Multimodal Vision Payload using official google-genai types.Part
+        from google.genai import types
+        image_part = None
         if image_file is not None:
             try:
                 image_file.seek(0)
-                pil_img = Image.open(image_file)
+                img_bytes = image_file.getvalue()
+                mime = getattr(image_file, "type", "image/jpeg") or "image/jpeg"
+                image_part = types.Part.from_bytes(data=img_bytes, mime_type=mime)
             except Exception:
-                pil_img = None
+                image_part = None
 
-        contents_payload = [full_prompt, pil_img] if pil_img is not None else full_prompt
+        contents_payload = [full_prompt, image_part] if image_part is not None else full_prompt
 
-        # Candidate models supporting multimodal generate_content
-        fallback_models = [
-            chosen_model,
-            "gemini-2.0-flash",
-            "gemini-2.0-flash-exp",
-            "gemini-1.5-flash-latest",
-            "gemma-4-26b-a4b-it",
-            "gemini-1.5-pro-latest",
-        ]
+        # For vision inspection, prioritize multimodal models
+        if image_part is not None:
+            fallback_models = [
+                "gemini-2.0-flash",
+                "gemini-2.5-flash",
+                "gemini-2.0-flash-exp",
+                chosen_model
+            ]
+        else:
+            fallback_models = [
+                chosen_model,
+                "gemini-2.0-flash",
+                "gemini-2.0-flash-exp",
+                "gemini-1.5-flash-latest",
+            ]
         
         tried_models = []
         for m in fallback_models:
@@ -566,6 +603,8 @@ with tab_diag:
                 # Helper for fallback matching - strictly checks crop selection
                 def get_local_response():
                     lower_q = (symptom_query or "").lower()
+                    if "Dragonfruit" in crop_type or "dragonfruit" in lower_q or "pitaya" in lower_q or "ڈریگن" in lower_q:
+                        return DEMO_RESPONSES.get("Dragonfruit Stem / Fruit Canker", DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"])
                     if "Mango" in crop_type or "آم" in lower_q or "mango" in lower_q:
                         return DEMO_RESPONSES.get("Mango Anthracnose & Dieback", DEMO_RESPONSES["Cotton Leaf Curl Virus (CLCuV)"])
                     if "Turnip" in crop_type or "گونگلو" in lower_q or "شلجم" in lower_q or "turnip" in lower_q or "gonglu" in lower_q:
