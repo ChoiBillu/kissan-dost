@@ -389,7 +389,7 @@ with tab_diag:
         with col_hint:
             st.caption("Supported in **Urdu (اردو)**, **Roman Urdu**, and **English**.")
 
-    # Gemma Inference Function
+    # Gemma Inference Function with Auto-Fallback
     def query_gemma(prompt_text: str, key: str, chosen_model: str, crop_name: str) -> str:
         system_instruction = (
             f"You are 'KisaanDost' (کسان دوست), an expert agricultural scientist and crop pathologist tailored "
@@ -407,11 +407,30 @@ with tab_diag:
         client = genai.Client(api_key=key)
         
         full_prompt = f"{system_instruction}\n\nFarmer Query:\n{prompt_text}"
-        response = client.models.generate_content(
-            model=chosen_model,
-            contents=full_prompt,
-        )
-        return response.text
+        
+        # Automatic resilience fallback chain if Google AI Studio experiences 500 errors on Gemma 4
+        fallback_models = [chosen_model, "gemma-2-27b-it", "gemma-2-9b-it", "gemini-2.5-flash", "gemini-1.5-flash"]
+        tried_models = []
+        for m in fallback_models:
+            if m not in tried_models:
+                tried_models.append(m)
+
+        last_error = None
+        for candidate in tried_models:
+            try:
+                response = client.models.generate_content(
+                    model=candidate,
+                    contents=full_prompt,
+                )
+                if candidate != chosen_model:
+                    st.toast(f"ℹ️ Google API 500 on {chosen_model} — successfully answered via {candidate}!", icon="🌾")
+                return response.text
+            except Exception as e:
+                last_error = e
+                continue
+        
+        # If all API endpoints fail (e.g. complete network outage)
+        raise last_error
 
     if run_btn:
         if not symptom_query.strip():
