@@ -13,29 +13,153 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Custom Styling for Dashboard
-st.markdown(
-    """
+# Sidebar Configuration (Controls & Theme Toggle)
+with st.sidebar:
+    st.image("https://img.icons8.com/color/96/wheat.png", width=60)
+    st.title("Control Center")
+    
+    # Theme Switcher (Dark / Light)
+    theme_choice = st.radio(
+        "🎨 Appearance / تھیم کا انتخاب",
+        options=["☀️ Light Emerald", "🌙 Deep Forest Dark"],
+        index=0,
+        horizontal=True,
+    )
+    is_dark = "Dark" in theme_choice
+    
+    st.markdown("---")
+    # Model Selector
+    model_name = st.selectbox(
+        "Gemma Model (Gemini API)",
+        options=[
+            "gemma-4-26b-a4b-it",
+            "gemma-2-27b-it",
+            "gemma-2-9b-it",
+            "gemini-2.5-flash"
+        ],
+        index=0,
+        help="Primary model: Gemma 4 via Gemini API (Hacktoberfest Faisalabad track)"
+    )
+    
+    # API Key Input
+    env_api_key = os.getenv("GEMINI_API_KEY", "")
+    api_key_input = st.text_input(
+        "Gemini API Key",
+        value=env_api_key,
+        type="password",
+        help="Reads from .env automatically or paste here directly."
+    )
+    
+    offline_toggle = st.checkbox(
+        "Offline / Demo Mode (Backup)", 
+        value=False, 
+        help="Uses instant local sample responses without Wi-Fi or API quota dependency on stage."
+    )
+
+    st.markdown("---")
+    st.markdown("### 🏆 Hackathon Tracks")
+    st.caption("✅ **Track 1:** Best Open-Source AI Project")
+    st.caption("✅ **Track 2:** Best Use of Gemma 4")
+    st.caption("📜 **License:** Apache 2.0 (Gemma) / MIT (App)")
+    st.caption("📍 **Venue:** Hack Day Faisalabad 2026")
+
+# Dynamic Theme Styling (Light vs. Dark)
+if is_dark:
+    theme_css = """
     <style>
+    .stApp {
+        background-color: #0d140e !important;
+        color: #e5f0e6 !important;
+    }
     .main-title {
         font-size: 2.3rem;
         font-weight: 800;
-        color: #1b4d24;
+        color: #81c784 !important;
         margin-bottom: 0px;
     }
     .subtitle {
         font-size: 1.05rem;
-        color: #436348;
+        color: #a3c4a7 !important;
         margin-bottom: 15px;
     }
-    .metric-container {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 20px;
+    .metric-card {
+        background: #142116 !important;
+        border: 1px solid #233b26 !important;
+        border-radius: 12px;
+        padding: 14px 18px;
+        flex: 1;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .metric-title {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        color: #81c784 !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .metric-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff !important;
+        margin-top: 4px;
+    }
+    .badge-gemma {
+        background-color: #1e3d23 !important;
+        color: #a5d6a7 !important;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 1px solid #2e7d32;
+    }
+    .result-card {
+        background-color: #142116 !important;
+        color: #e5f0e6 !important;
+        border-radius: 12px;
+        padding: 22px;
+        border: 1px solid #28442c !important;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        margin-top: 15px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: #162418 !important;
+        color: #a5d6a7 !important;
+        border-radius: 8px 8px 0px 0px;
+        padding: 8px 16px;
+        font-weight: 600;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #2e7d32 !important;
+        color: #ffffff !important;
+    }
+    div[data-testid="stForm"] {
+        background-color: #121c13 !important;
+        border: 1px solid #233b26 !important;
+        border-radius: 10px;
+    }
+    </style>
+    """
+else:
+    theme_css = """
+    <style>
+    .stApp {
+        background-color: #ffffff !important;
+        color: #1b3320 !important;
+    }
+    .main-title {
+        font-size: 2.3rem;
+        font-weight: 800;
+        color: #1b4d24 !important;
+        margin-bottom: 0px;
+    }
+    .subtitle {
+        font-size: 1.05rem;
+        color: #436348 !important;
+        margin-bottom: 15px;
     }
     .metric-card {
-        background: linear-gradient(135deg, #eef7ee 0%, #f7fbf7 100%);
-        border: 1px solid #cce5cc;
+        background: linear-gradient(135deg, #eef7ee 0%, #f7fbf7 100%) !important;
+        border: 1px solid #cce5cc !important;
         border-radius: 12px;
         padding: 14px 18px;
         flex: 1;
@@ -44,37 +168,36 @@ st.markdown(
     .metric-title {
         font-size: 0.82rem;
         text-transform: uppercase;
-        color: #55755b;
+        color: #55755b !important;
         font-weight: 700;
         letter-spacing: 0.5px;
     }
     .metric-value {
         font-size: 1.25rem;
         font-weight: 700;
-        color: #1a4221;
+        color: #1a4221 !important;
         margin-top: 4px;
     }
     .badge-gemma {
-        background-color: #2e7d32;
-        color: white;
+        background-color: #2e7d32 !important;
+        color: white !important;
         padding: 3px 10px;
         border-radius: 12px;
         font-size: 0.8rem;
         font-weight: 600;
     }
     .result-card {
-        background-color: #fcfdfc;
+        background-color: #fcfdfc !important;
+        color: #1b3320 !important;
         border-radius: 12px;
         padding: 22px;
-        border: 1px solid #dbe8db;
+        border: 1px solid #dbe8db !important;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         margin-top: 15px;
     }
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-    }
     .stTabs [data-baseweb="tab"] {
-        background-color: #f1f6f1;
+        background-color: #f1f6f1 !important;
+        color: #2e7d32 !important;
         border-radius: 8px 8px 0px 0px;
         padding: 8px 16px;
         font-weight: 600;
@@ -83,10 +206,15 @@ st.markdown(
         background-color: #2e7d32 !important;
         color: white !important;
     }
+    div[data-testid="stForm"] {
+        background-color: #f9fbf9 !important;
+        border: 1px solid #e0ede0 !important;
+        border-radius: 10px;
+    }
     </style>
-    """,
-    unsafe_allow_html=True,
-)
+    """
+
+st.markdown(theme_css, unsafe_allow_html=True)
 
 # Demo / Fallback Responses for Live Presentation Resilience
 DEMO_RESPONSES = {
@@ -164,46 +292,6 @@ DEMO_RESPONSES = {
 * متاثرہ فصل کا گنا بیج کے طور پر ہرگز استعمال نہ کریں۔
 * بیج کے پوروں کو کاربینڈازم یا تھائیو فینیٹ میتھائل کے محلول میں 10 منٹ ڈبو کر کاشت کریں۔"""
 }
-
-# Sidebar Configuration
-with st.sidebar:
-    st.image("https://img.icons8.com/color/96/wheat.png", width=60)
-    st.title("Control Center")
-    
-    # Model Selector
-    model_name = st.selectbox(
-        "Gemma Model (Gemini API)",
-        options=[
-            "gemma-4-26b-a4b-it",
-            "gemma-2-27b-it",
-            "gemma-2-9b-it",
-            "gemini-2.5-flash"
-        ],
-        index=0,
-        help="Primary model: Gemma 4 via Gemini API (Hacktoberfest Faisalabad track)"
-    )
-    
-    # API Key Input
-    env_api_key = os.getenv("GEMINI_API_KEY", "")
-    api_key_input = st.text_input(
-        "Gemini API Key",
-        value=env_api_key,
-        type="password",
-        help="Reads from .env automatically or paste here directly."
-    )
-    
-    offline_toggle = st.checkbox(
-        "Offline / Demo Mode (Backup)", 
-        value=False, 
-        help="Uses instant local sample responses without Wi-Fi or API quota dependency on stage."
-    )
-
-    st.markdown("---")
-    st.markdown("### 🏆 Hackathon Tracks")
-    st.caption("✅ **Track 1:** Best Open-Source AI Project")
-    st.caption("✅ **Track 2:** Best Use of Gemma 4")
-    st.caption("📜 **License:** Apache 2.0 (Gemma) / MIT (App)")
-    st.caption("📍 **Venue:** Hack Day Faisalabad 2026")
 
 # Header Section
 col_title, col_badge = st.columns([4, 1])
